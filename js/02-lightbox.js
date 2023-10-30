@@ -4,29 +4,27 @@ import { galleryItems } from "./gallery-items.js";
 const galleryList = document.querySelector(".gallery");
 
 galleryItems.forEach((image) => {
-  const li = document.createElement("li");
+  const li = document.createElement("li"); 
+  li.classList.add("gallery__item"); 
+  li.innerHTML = `
+  <a class="gallery__link" href="${image.original}">
+    <img
+      class="gallery__image"
+      src="${image.preview}"
+      alt="${image.description}"
+    />
+  </a>`;
   galleryList.append(li);
-  li.classList.add("gallery__item");
-  const imgElement = `<img class="gallery__image" src=${image.preview} data-source=${image.original} alt=${image.description} />`;
-  li.insertAdjacentHTML("afterbegin", imgElement);
 });
 
-const imageList = document.querySelectorAll("img");
+galleryList.addEventListener("click", preventDefaultClick);
 
-imageList.forEach((image) => {
-  image.addEventListener("click", (e) => {
-    galleryItems.forEach((item) => {
-      if (item.description.includes(`${image.alt}`)) {
-        basicLightbox
-          .create(
-            `
-            <img src=${image.dataset.source}>
-    `
-          )
-          .show();
-      }
-    });
-  });
+function preventDefaultClick(e) {
+  e.preventDefault();
+}
+
+const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: "alt", // utilizeaza textul din atributul alt al img
+  captionDelay: 250,
 });
-
 
